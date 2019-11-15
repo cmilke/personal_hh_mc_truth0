@@ -11,6 +11,7 @@
 #include "mytruth/readtruth_hhbbzzllvv.h"
 #include "mytruth/readtruth_hhbbzz4l.h"
 #include "mytruth/readtruth_hh4b.h"
+#include "mytruth/readtruth_vbfhh.h"
 
 int main( int argc, char* argv[] ){
 
@@ -73,6 +74,10 @@ int main( int argc, char* argv[] ){
   }
   else if( channel == "hhbbzz4l" ){
     readtruth_hhbbzz4l* rt = new readtruth_hhbbzz4l();
+    job.algsAdd( rt );
+  }
+  else if( channel == "vbfhh" ){
+    readtruth_vbfhh* rt = new readtruth_vbfhh();
     job.algsAdd( rt );
   }
   else if( channel == "hh4b" ){
