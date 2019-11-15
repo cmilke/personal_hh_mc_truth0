@@ -2,6 +2,7 @@
 #include <mytruth/readtruth_hhbbzz4l.h>
 #include <mytruth/readtruth_hhbbzzllvv.h>
 #include <mytruth/readtruth_hh4b.h>
+#include <mytruth/readtruth_vbfhh.h>
 
 #ifdef __CINT__
 
@@ -17,4 +18,5 @@
 #pragma link C++ class readtruth_hhbbzz4l+;
 #pragma link C++ class readtruth_hhbbzzllvv+;
 #pragma link C++ class readtruth_hh4b+;
+#pragma link C++ class readtruth_vbfhh+;
 #endif
