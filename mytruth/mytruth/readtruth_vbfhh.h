@@ -17,8 +17,8 @@
 #include "xAODEventInfo/EventInfo.h"
 
 
-enum HHMODEL { non_resonant, scalar, graviton};
-enum HHCHANNEL { bbbb, bbyy, bbtt_lh, bbtt_hh, wwyy, bbww, wwww, bbtt_ll, tttt, bbZZ };
+//enum HHMODEL { non_resonant, scalar, graviton};
+//enum HHCHANNEL { bbbb, bbyy, bbtt_lh, bbtt_hh, wwyy, bbww, wwww, bbtt_ll, tttt, bbZZ };
 
 
 class readtruth_vbfhh : public EL::Algorithm
@@ -30,8 +30,8 @@ public:
 
   // default values all set for non-resonant
   int mX = -1;
-  HHMODEL model = non_resonant;
-  HHCHANNEL channel = bbbb;
+//  HHMODEL model = non_resonant;
+//  HHCHANNEL channel = bbbb;
 
   // variables that don't get filled at submission time should be
   // protected from being send from the submission node to the worker
