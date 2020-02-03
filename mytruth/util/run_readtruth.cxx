@@ -10,6 +10,9 @@
 #include "mytruth/readtruth_azheavyh.h"
 #include "mytruth/readtruth_hhbbzzllvv.h"
 #include "mytruth/readtruth_hhbbzz4l.h"
+#include "mytruth/readtruth_hhbbwwlvlv.h"
+#include "mytruth/readtruth_hhbbwwlvlv_chkweight.h"
+#include "mytruth/readtruth_hhbbttlvlv.h"
 #include "mytruth/readtruth_hh4b.h"
 
 int main( int argc, char* argv[] ){
@@ -27,6 +30,11 @@ int main( int argc, char* argv[] ){
   double nEvtMax = -1;
   if( argc == 6 ){
     nEvtMax = atof(argv[5]);
+  }
+
+  std::string option7 = "";
+  if( argc == 7 ){
+    option7 = argv[6];
   }
 
   // channel specific
@@ -69,7 +77,22 @@ int main( int argc, char* argv[] ){
     job.algsAdd( rt );
   }else if( channel == "hhbbzzllvv" ){
     readtruth_hhbbzzllvv* rt = new readtruth_hhbbzzllvv();
+	rt->setOption( option7 );
     job.algsAdd( rt );
+  }
+  else if( channel == "hhbbwwlvlv" ){
+    readtruth_hhbbwwlvlv* rt = new readtruth_hhbbwwlvlv();
+	rt->setOption( option7 );
+	job.algsAdd( rt );
+  }
+  else if( channel == "hhbbwwlvlv_chkweight" ){
+    readtruth_hhbbwwlvlv_chkweight* rt = new readtruth_hhbbwwlvlv_chkweight();
+	job.algsAdd( rt );
+  }
+  else if( channel == "hhbbttlvlv" ){
+    readtruth_hhbbttlvlv* rt = new readtruth_hhbbttlvlv();
+	rt->setOption( option7 );
+	job.algsAdd( rt );
   }
   else if( channel == "hhbbzz4l" ){
     readtruth_hhbbzz4l* rt = new readtruth_hhbbzz4l();

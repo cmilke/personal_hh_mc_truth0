@@ -1,12 +1,13 @@
 #include <EventLoop/Job.h>
 #include <EventLoop/StatusCode.h>
 #include <EventLoop/Worker.h>
-#include <mytruth/readtruth_hhbbzzllvv.h>
+#include <mytruth/readtruth_hhbbwwlvlv.h>
+#include <TFile.h>
 
 // this is needed to distribute the algorithm to the workers
-ClassImp(readtruth_hhbbzzllvv)
+ClassImp(readtruth_hhbbwwlvlv)
 
-readtruth_hhbbzzllvv :: readtruth_hhbbzzllvv ()
+readtruth_hhbbwwlvlv :: readtruth_hhbbwwlvlv ()
 {
   // Here you put any code for the base initialization of variables,
   // e.g. initialize all pointers to 0.  Note that you should only put
@@ -14,13 +15,10 @@ readtruth_hhbbzzllvv :: readtruth_hhbbzzllvv ()
   // called on both the submission and the worker node.  Most of your
   // initialization code will go into histInitialize() and
   // initialize().
+
 }
 
-void readtruth_hhbbzzllvv :: setOption ( std::string opt ){
-  option = opt;
-}
-
-TH1F* readtruth_hhbbzzllvv :: mkTH1F( const char* n, const char* t, double nb, double x0, double x1){
+TH1F* readtruth_hhbbwwlvlv :: mkTH1F( const char* n, const char* t, double nb, double x0, double x1){
   TH1F* h = new TH1F( n, t, nb, x0, x1 );
   h->SetStats(0);
   h->Sumw2(1);
@@ -29,7 +27,11 @@ TH1F* readtruth_hhbbzzllvv :: mkTH1F( const char* n, const char* t, double nb, d
   return h;
 }
 
-TH2F* readtruth_hhbbzzllvv::mkTH2F( const char* n, const char* t, double xnb, double x0, double x1, double ynb, double y0, double y1 ){
+void readtruth_hhbbwwlvlv :: setOption ( std::string opt ){
+  option = opt;
+}
+
+TH2F* readtruth_hhbbwwlvlv::mkTH2F( const char* n, const char* t, double xnb, double x0, double x1, double ynb, double y0, double y1 ){
   TH2F* h = new TH2F( n, t, xnb, x0, x1, ynb, y0, y1 );
   h->SetStats(0);
   h->Sumw2(1);
@@ -39,7 +41,7 @@ TH2F* readtruth_hhbbzzllvv::mkTH2F( const char* n, const char* t, double xnb, do
 }
 
 // in principal we should look at the particlet in the end of self-decay chains
-const xAOD::TruthParticle* readtruth_hhbbzzllvv :: correctedParticle( const xAOD::TruthParticle * part ){
+const xAOD::TruthParticle* readtruth_hhbbwwlvlv :: correctedParticle( const xAOD::TruthParticle * part ){
   //Info("correctedParticle()", "Check particle with barcode %d, status %d", part->barcode(), part->status() );
   const xAOD::TruthParticle* corrpart = part;
   for( unsigned ikid=0; ikid<part->nChildren(); ++ikid ){
@@ -58,7 +60,7 @@ const xAOD::TruthParticle* readtruth_hhbbzzllvv :: correctedParticle( const xAOD
 // only apply to quarks who has hadronization
 // get the quark before they get in hadronization (not look good in bb_m)
 // does not work ...
-const xAOD::TruthParticle* readtruth_hhbbzzllvv :: correctedQuark( const xAOD::TruthParticle * part ){
+const xAOD::TruthParticle* readtruth_hhbbwwlvlv :: correctedQuark( const xAOD::TruthParticle * part ){
   //Info("correctedParticle()", "Check particle with barcode %d, status %d", part->barcode(), part->status() );
   const xAOD::TruthParticle* corrpart = part;
   for( unsigned ikid=0; ikid<part->nChildren(); ++ikid ){
@@ -76,14 +78,14 @@ const xAOD::TruthParticle* readtruth_hhbbzzllvv :: correctedQuark( const xAOD::T
 */
 
 
-bool readtruth_hhbbzzllvv :: hasParent( const xAOD::TruthParticle* kid, int parentId ){
+bool readtruth_hhbbwwlvlv :: hasParent( const xAOD::TruthParticle* kid, int parentId ){
   for( unsigned int iparent=0; iparent<kid->nParents(); ++iparent ){
     if( kid->parent(iparent)->pdgId() == parentId ) return true;
   }
   return false;
 }
 
-void readtruth_hhbbzzllvv :: printChildren( const xAOD::TruthParticle* part ){
+void readtruth_hhbbwwlvlv :: printChildren( const xAOD::TruthParticle* part ){
   Info( "printChildren()", "Looking at id %d, pt %f, eta %f, status %d", part->pdgId(), part->pt(), part->eta(), part->status() );
   for( unsigned int ikid=0; ikid<part->nChildren(); ++ikid){
     const xAOD::TruthParticle* kid = part->child(ikid);
@@ -95,7 +97,7 @@ void readtruth_hhbbzzllvv :: printChildren( const xAOD::TruthParticle* part ){
 // collect all hadrons after quark undergoing hadroinization
 // sort of making a jet
 // not working at all !
-TLorentzVector readtruth_hhbbzzllvv :: getJet( const xAOD::TruthParticle* part ){
+TLorentzVector readtruth_hhbbwwlvlv :: getJet( const xAOD::TruthParticle* part ){
   TLorentzVector jet;
   for( unsigned int ikid=0; ikid<part->nChildren(); ++ikid ){
     jet += part->child(ikid)->p4();
@@ -104,11 +106,11 @@ TLorentzVector readtruth_hhbbzzllvv :: getJet( const xAOD::TruthParticle* part )
 }
 */
 
-bool readtruth_hhbbzzllvv :: larger_pT( const xAOD::TruthParticle* p1, const xAOD::TruthParticle* p2 ){
+bool readtruth_hhbbwwlvlv :: larger_pT( const xAOD::TruthParticle* p1, const xAOD::TruthParticle* p2 ){
   return p1->pt() > p2->pt();
 }
 
-EL::StatusCode readtruth_hhbbzzllvv :: setupJob (EL::Job& job)
+EL::StatusCode readtruth_hhbbwwlvlv :: setupJob (EL::Job& job)
 {
   // Here you put code that sets up the job on the submission object
   // so that it is ready to work with your algorithm, e.g. you can
@@ -129,12 +131,20 @@ EL::StatusCode readtruth_hhbbzzllvv :: setupJob (EL::Job& job)
 
 
 
-EL::StatusCode readtruth_hhbbzzllvv :: histInitialize ()
+EL::StatusCode readtruth_hhbbwwlvlv :: histInitialize ()
 {
   // Here you do everything that needs to be done at the very
   // beginning on each worker node, e.g. create histograms and output
   // trees.  This method gets called before any input files are
   // connected.
+
+  if(option.find("reweight") != std::string::npos){
+    std::string delimiter = "|";
+	std::string token = option.substr(0, option.find(delimiter));
+	TFile _f(token.c_str());
+	reweight_on_mHH = (TH1F*) _f.Get("reweight_on_mHH");
+	reweight_on_mHH->SetDirectory(0);
+  }
 
   H1_pT = mkTH1F("H1_pT","p_{T}(H1)", 50, 0, 800);
   H1_eta = mkTH1F("H1_eta","#eta(H1)", 40, -5, 5);
@@ -190,12 +200,12 @@ EL::StatusCode readtruth_hhbbzzllvv :: histInitialize ()
   mu1_phi = mkTH1F("mu1_phi","#phi(muon 1)", 40, -3.15, 3.15 );
   mu1_E = mkTH1F("mu1_E","E(muon 1)", 50, 0, 2000);
 
-  mu1mu2_pT = mkTH2F("mu1mu2_pT",";p_{T}(muon 1);p_{T}(muon 2);", 800, 0, 800, 800, 0, 800);
-
   mu2_pT = mkTH1F("mu2_pT","p_{T}(muon 2)", 800, 0, 800);
   mu2_eta = mkTH1F("mu2_eta","#eta(muon 2)", 100, -5, 5);
   mu2_phi = mkTH1F("mu2_phi","#phi(muon 2)", 40, -3.15, 3.15 );
   mu2_E = mkTH1F("mu2_E","E(muon 2)", 50, 0, 2000);
+
+  mu1mu2_pT = mkTH2F("mu1mu2_pT",";p_{T}(muon 1);p_{T}(muon 2);", 800, 0, 800, 800, 0, 800);
 
   tau1_pT = mkTH1F("tau1_pT","p_{T}(tau 1)", 800, 0, 800);
   tau1_eta = mkTH1F("tau1_eta","#eta(tau 1)", 100, -5, 5);
@@ -282,7 +292,7 @@ EL::StatusCode readtruth_hhbbzzllvv :: histInitialize ()
   dPhi_bb_llvv = mkTH1F("dPhi_bb_llvv","#Delta#phi(bb,ll#nu#nu)", 40, 0, 3.15);
 
   // register
-  //for_each( myhist.begin(), myhist.end(), std::bind1st( std::mem_fun( &readtruth_hhbbzzllvv::mbook ), this ) );
+  //for_each( myhist.begin(), myhist.end(), std::bind1st( std::mem_fun( &readtruth_hhbbwwlvlv::mbook ), this ) );
   // now done in mkTH1F
 
   return EL::StatusCode::SUCCESS;
@@ -290,7 +300,7 @@ EL::StatusCode readtruth_hhbbzzllvv :: histInitialize ()
 
 
 
-EL::StatusCode readtruth_hhbbzzllvv :: fileExecute ()
+EL::StatusCode readtruth_hhbbwwlvlv :: fileExecute ()
 {
   // Here you do everything that needs to be done exactly once for every
   // single file, e.g. collect a list of all lumi-blocks processed
@@ -299,7 +309,7 @@ EL::StatusCode readtruth_hhbbzzllvv :: fileExecute ()
 
 
 
-EL::StatusCode readtruth_hhbbzzllvv :: changeInput (bool firstFile)
+EL::StatusCode readtruth_hhbbwwlvlv :: changeInput (bool firstFile)
 {
   // Here you do everything you need to do when we change input files,
   // e.g. resetting branch addresses on trees.  If you are using
@@ -309,7 +319,7 @@ EL::StatusCode readtruth_hhbbzzllvv :: changeInput (bool firstFile)
 
 
 
-EL::StatusCode readtruth_hhbbzzllvv :: initialize ()
+EL::StatusCode readtruth_hhbbwwlvlv :: initialize ()
 {
   // Here you do everything that you need to do after the first input
   // file has been connected and before the first event is processed,
@@ -338,7 +348,7 @@ EL::StatusCode readtruth_hhbbzzllvv :: initialize ()
 
 
 
-EL::StatusCode readtruth_hhbbzzllvv :: execute ()
+EL::StatusCode readtruth_hhbbwwlvlv :: execute ()
 {
   // Here you do everything that needs to be done on every single
   // events, e.g. read input variables, apply cuts, and fill
@@ -387,11 +397,11 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
   std::vector<const xAOD::TruthParticle*> myelectrons; // all 2 electrons ordere by pT
   std::vector<const xAOD::TruthParticle*> mymuons; // all 2 muons ordere by pT
   std::vector<const xAOD::TruthParticle*> mytaus; // all 2 taus ordere by pT
-  std::vector<const xAOD::TruthParticle*> myleptons; // all e mu leptons ordere by pT, from either emu or tau
+  std::vector<const xAOD::TruthParticle*> myleptons; // all e mu from either emu or tau
   std::vector<const xAOD::TruthParticle*> myneutrinos; // all 2 neutrinos ordere by pT
 
-  std::vector<const xAOD::TruthParticle*> myleptons_viaemu; // only e mu leps, only from  e mu
-  std::vector<const xAOD::TruthParticle*> myleptons_viatau; // only e mu leps, only from tau lep decay
+  std::vector<const xAOD::TruthParticle*> myleptons_viaemu; // only e mu leps, only fro emu
+  std::vector<const xAOD::TruthParticle*> myleptons_viatau; // only e mu leps, onlu from tau lep decay
 
   for( int ipart=0; ipart<npart; ++ipart ){
 
@@ -425,26 +435,26 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
 	  //     particle->pt(), particle->px(), particle->py(), particle->pz(), particle->eta(), particle->phi() );
 	}
 
-	// Z
-	if( particle->pdgId() == 23 ){
+	// W
+	if( abs(particle->pdgId()) == 24 ){
 	  particle = correctedParticle( particle ); // after shower dressing
 
-	  if( mycollection.count("Z1") == 0 ) mycollection["Z1"] = particle;
+	  if( mycollection.count("W1") == 0 ) mycollection["W1"] = particle;
 	  else{
-	    if( particle != mycollection["Z1"] ) mycollection["Z2"] = particle;
+	    if( particle != mycollection["W1"] ) mycollection["W2"] = particle;
 	  }
 	}
 
 	// once found H1 H2 quit loop (only used without looking into H decays)
 	if( mycollection.count("H1")==1 && mycollection.count("H2")==1
-	&&  mycollection.count("Z1")==1 && mycollection.count("Z2")==1 )
+	&&  mycollection.count("W1")==1 && mycollection.count("W2")==1 )
 	  break;
 
   }
 
   // check
   if( mycollection.count("H1")==1 && mycollection.count("H2")==1
-  &&  mycollection.count("Z1")==1 && mycollection.count("Z2")==1 ){
+  &&  mycollection.count("W1")==1 && mycollection.count("W2")==1 ){
     //++ctr_save; // moved down
   }else{
     Error("execute()","cannot fine a pair of Higgs, skip event"); return EL::StatusCode::SUCCESS;
@@ -459,19 +469,19 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
 	mycollection["H1"] = _h1;
 	mycollection["H2"] = _h2;
   }
-  _h1_pT = mycollection["Z1"]->pt();
-  _h2_pT = mycollection["Z2"]->pt();
+  _h1_pT = mycollection["W1"]->pt();
+  _h2_pT = mycollection["W2"]->pt();
   if( _h1_pT < _h2_pT ){
-    const xAOD::TruthParticle* _h2 = mycollection["Z1"];
-    const xAOD::TruthParticle* _h1 = mycollection["Z2"];
-	mycollection["Z1"] = _h1;
-	mycollection["Z2"] = _h2;
+    const xAOD::TruthParticle* _h2 = mycollection["W1"];
+    const xAOD::TruthParticle* _h1 = mycollection["W2"];
+	mycollection["W1"] = _h1;
+	mycollection["W2"] = _h2;
   }
 
   // find bb from H
   for( unsigned int ikid=0; ikid<mycollection["H1"]->nChildren(); ++ikid){
     const xAOD::TruthParticle* kid = mycollection["H1"]->child(ikid);
-	if( abs(kid->pdgId()) == 23 ) break; // skip H as H->ZZ
+	if( abs(kid->pdgId()) == 24 ) break; // skip H as H->WW
 	if( abs(kid->pdgId()) == 5 ){
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(mybquarks.begin(), mybquarks.end(), kid) == mybquarks.end() ){
@@ -482,7 +492,7 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
   }
   for( unsigned int ikid=0; ikid<mycollection["H2"]->nChildren(); ++ikid){
     const xAOD::TruthParticle* kid = mycollection["H2"]->child(ikid);
-	if( abs(kid->pdgId()) == 23 ) break; // skip H as H->ZZ
+	if( abs(kid->pdgId()) == 24 ) break; // skip H as H->WW
 	if( abs(kid->pdgId()) == 5 ){
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(mybquarks.begin(), mybquarks.end(), kid) == mybquarks.end() ){
@@ -497,24 +507,24 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
 
 
 
-  // find llvv from ZZ
-  for( unsigned int ikid=0; ikid<mycollection["Z1"]->nChildren(); ++ikid){
-    const xAOD::TruthParticle* kid = mycollection["Z1"]->child(ikid);
-	if( abs(kid->pdgId()) == 11){// && kid->status() == 1 ){
+  // find lvlv from WW
+  for( unsigned int ikid=0; ikid<mycollection["W1"]->nChildren(); ++ikid){
+    const xAOD::TruthParticle* kid = mycollection["W1"]->child(ikid);
+	if( abs(kid->pdgId()) == 11){
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(myelectrons.begin(), myelectrons.end(), kid) == myelectrons.end() ){
 	    myelectrons.push_back(kid);
 		myleptons.push_back(kid);
 		myleptons_viaemu.push_back(kid);
 	  }
-	}else if( abs(kid->pdgId()) ==13){//  && kid->status() == 1  ){
+	}else if( abs(kid->pdgId()) ==13){
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(mymuons.begin(), mymuons.end(), kid) == mymuons.end() ){
 	    mymuons.push_back(kid);
 		myleptons.push_back(kid);
 		myleptons_viaemu.push_back(kid);
 	  }
-	}else if( abs(kid->pdgId()) == 15){// && kid->status() == 2  ){
+	}else if( abs(kid->pdgId()) == 15){
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(mytaus.begin(), mytaus.end(), kid) == mytaus.end() ){
 	    mytaus.push_back(kid);
@@ -528,30 +538,31 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
 		  }
 		}
 	  }
-	}else if( abs(kid->pdgId()) == 12){// && kid->status() == 1  ){ // in bbZZ llvv v is only 12
+	}else if( abs(kid->pdgId()) == 12 || abs(kid->pdgId()) == 14 || abs(kid->pdgId()) == 16 ){
+	  // bbWW lvlv different than bbZZ, v here has all flavours
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(myneutrinos.begin(), myneutrinos.end(), kid) == myneutrinos.end() ){
 	    myneutrinos.push_back(kid);
 	  }
 	}
   }
-  for( unsigned int ikid=0; ikid<mycollection["Z2"]->nChildren(); ++ikid){
-    const xAOD::TruthParticle* kid = mycollection["Z2"]->child(ikid);
-	if( abs(kid->pdgId()) == 11){// && kid->status() == 1  ){
+  for( unsigned int ikid=0; ikid<mycollection["W2"]->nChildren(); ++ikid){
+    const xAOD::TruthParticle* kid = mycollection["W2"]->child(ikid);
+	if( abs(kid->pdgId()) == 11){
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(myelectrons.begin(), myelectrons.end(), kid) == myelectrons.end() ){
 	    myelectrons.push_back(kid);
 		myleptons.push_back(kid);
 		myleptons_viaemu.push_back(kid);
 	  }
-	}else if( abs(kid->pdgId()) == 13){// && kid->status() == 1  ){
+	}else if( abs(kid->pdgId()) == 13){
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(mymuons.begin(), mymuons.end(), kid) == mymuons.end() ){
 	    mymuons.push_back(kid);
 		myleptons.push_back(kid);
 		myleptons_viaemu.push_back(kid);
 	  }
-	}else if( abs(kid->pdgId()) == 15){// && kid->status() == 2  ){
+	}else if( abs(kid->pdgId()) == 15){
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(mytaus.begin(), mytaus.end(), kid) == mytaus.end() ){
 	    mytaus.push_back(kid);
@@ -565,7 +576,8 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
 		  }
 		}
 	  }
-	}else if( abs(kid->pdgId()) == 12){// && kid->status() == 1  ){ // in bbZZ llvv v is only 12
+	}else if( abs(kid->pdgId()) == 12 || abs(kid->pdgId()) == 14 || abs(kid->pdgId()) == 16 ){
+	  // bbWW lvlv different than bbZZ, v here has all flavours
 	  kid = correctedParticle( kid ); // after shower dressing
 	  if( std::find(myneutrinos.begin(), myneutrinos.end(), kid) == myneutrinos.end() ){
 	    myneutrinos.push_back(kid);
@@ -582,6 +594,16 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
   std::sort( myleptons_viaemu.begin(), myleptons_viaemu.end(), larger_pT );
   std::sort( myleptons_viatau.begin(), myleptons_viatau.end(), larger_pT );
 
+  if( myneutrinos.size() < 2 ){
+    //Error("execute()","myneutrinos %d !!!", myneutrinos.size());
+    //Error("execute()","myelectrons %d !!!", myelectrons.size());
+    //Error("execute()","mymuons %d !!!", mymuons.size());
+    //Error("execute()","mytaus %d !!!", mytaus.size());
+    //Error("execute()","myleptons %d !!!", myleptons.size());
+	Error("execute()","SKIP event: less than 2 neutrino is found!!!");
+	return EL::StatusCode::SUCCESS;
+  }
+
   // mimic truth filter in JO
   if( option.find("mimicfilter") != std::string::npos ){
     unsigned int _nlepton = 0;
@@ -595,8 +617,18 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
       return EL::StatusCode::SUCCESS;
     }
   }
+  ++ctr_save;
 
-  ++ctr_save; // moved here
+  // system var
+  TLorentzVector v_H1 = mycollection["H1"]->p4();
+  TLorentzVector v_H2 = mycollection["H2"]->p4();
+  TLorentzVector v_HH = v_H1 + v_H2;
+
+  if( option.find("reweight") != std::string::npos ){
+    double _mHH = v_HH.M();
+	weight *= reweight_on_mHH->GetBinContent( reweight_on_mHH->FindBin(_mHH*GeV) );
+  }
+
 
   // test
   //std::cout << "myelectrons: " << myelectrons.size() << std::endl;
@@ -620,11 +652,13 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
   H2_E->Fill( mycollection["H2"]->e()*GeV, weight );
   H2_m->Fill( mycollection["H2"]->m()*GeV, weight );
 
+  // move above to have mHH which is used for reweighting
+/*
   // system var
   TLorentzVector v_H1 = mycollection["H1"]->p4();
   TLorentzVector v_H2 = mycollection["H2"]->p4();
   TLorentzVector v_HH = v_H1 + v_H2;
-
+*/
 
   HH_pT->Fill( v_HH.Pt()*GeV, weight );
 //  std::cout << "DDD pTHH: " << v_HH.Pt()*GeV << " weight: " << weight << std::endl;
@@ -744,12 +778,15 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
   bb_E->Fill( v_bb.E()*GeV, weight );
   bb_m->Fill( v_bb.M()*GeV, weight );
 
-  // vv for Z
+  // below call lvlv as llvv, as the class is derived from ZZ llvv
+  // but physics is valid
+
+  // vv for partial WW
   TLorentzVector v_vv = myneutrinos[0]->p4() + myneutrinos[1]->p4();
   nunu_pT  -> Fill( v_vv.Pt()*GeV, weight );
   nunu_phi -> Fill( v_vv.Phi(), weight );
 
-  // ll for Z
+  // ll for partial WW
   if( myleptons.size() >=2 ){
   TLorentzVector v_ll = myleptons[0]->p4() + myleptons[1]->p4();
   ll_pT  -> Fill( v_ll.Pt()*GeV, weight );
@@ -791,7 +828,7 @@ EL::StatusCode readtruth_hhbbzzllvv :: execute ()
 
 
 
-EL::StatusCode readtruth_hhbbzzllvv :: postExecute ()
+EL::StatusCode readtruth_hhbbwwlvlv :: postExecute ()
 {
   // Here you do everything that needs to be done after the main event
   // processing.  This is typically very rare, particularly in user
@@ -801,7 +838,7 @@ EL::StatusCode readtruth_hhbbzzllvv :: postExecute ()
 
 
 
-EL::StatusCode readtruth_hhbbzzllvv :: finalize ()
+EL::StatusCode readtruth_hhbbwwlvlv :: finalize ()
 {
   // This method is the mirror image of initialize(), meaning it gets
   // called after the last event has been processed on the worker node
@@ -817,13 +854,13 @@ EL::StatusCode readtruth_hhbbzzllvv :: finalize ()
 
   xAOD::TEvent* event = wk()->xaodEvent();
 
-  Error("finalize()", "Total events: %d, truth identified (HH+ZZ) events: %d", ctr_tot, int(ctr_save) );
+  Error("finalize()", "Total events: %d, truth identified (HH+WW) events: %d", ctr_tot, int(ctr_save) );
 
-  Error("finalize()", "Zee events: %f", el1_pT->GetEntries() );
-  Error("finalize()", "Zmumu events: %f", mu1_pT->GetEntries() );
-  Error("finalize()", "Ztautau events: %f", tau1_pT->GetEntries() );
-  Error("finalize()", "Zvv events: %f", nu1_pT->GetEntries() );
-  Error("finalize()", "2L events: %f that should be 1/3+1/3+1/3*0.35*0.35 of total events", lep1_pT->GetEntries() );
+  Error("finalize()", "Wenu events: %f", el1_pT->GetEntries() );
+  Error("finalize()", "Wmunu events: %f", mu1_pT->GetEntries() );
+  Error("finalize()", "Wtaunu events: %f", tau1_pT->GetEntries() );
+  Error("finalize()", "Neutrino events: %f", nu1_pT->GetEntries() );
+  Error("finalize()", "2L events: %f that should be (1./3*1./3 + 1./3*1./3*2 + 1./3*1./3 + 1./3*1./3*0.35*2*2 + 1./3*1./3*0.35*0.35) of total events", lep1_pT->GetEntries() );
 
   // weight
   Error("finalize()", "# evt with positive weight: %ld", ctr_posw);
@@ -834,7 +871,7 @@ EL::StatusCode readtruth_hhbbzzllvv :: finalize ()
 
 
 
-EL::StatusCode readtruth_hhbbzzllvv :: histFinalize ()
+EL::StatusCode readtruth_hhbbwwlvlv :: histFinalize ()
 {
   // This method is the mirror image of histInitialize(), meaning it
   // gets called after the last event has been processed on the worker

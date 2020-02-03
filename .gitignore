@@ -4,3 +4,4 @@ RootCoreBin
 .RootCoreBin
 rcSetup*
 *.pdf
+.asetup.save

@@ -1,5 +1,5 @@
-#ifndef mytruth_readtruth_hhbbzzllvv_H
-#define mytruth_readtruth_hhbbzzllvv_H
+#ifndef mytruth_readtruth_hhbbwwlvlv_H
+#define mytruth_readtruth_hhbbwwlvlv_H
 
 #include <EventLoop/Algorithm.h>
 #include <xAODRootAccess/Init.h>
@@ -19,7 +19,7 @@
 //enum HHMODEL { non_resonant, scalar, graviton};
 //enum HHCHANNEL { bbbb, bbyy, bbtt_lh, bbtt_hh, wwyy, bbww, wwww, bbtt_ll, tttt, bbZZ };
 
-class readtruth_hhbbzzllvv : public EL::Algorithm
+class readtruth_hhbbwwlvlv : public EL::Algorithm
 {
   // put your configuration variables here as public variables.
   // that way they can be set directly from CINT and python.
@@ -53,6 +53,8 @@ public:
   TLorentzVector getJet( const xAOD::TruthParticle* part );
 
   static bool larger_pT( const xAOD::TruthParticle* p1, const xAOD::TruthParticle* p2 );
+
+  TH1F* reweight_on_mHH; //!
 
   // single particle properties
   
@@ -197,6 +199,7 @@ public:
   TH1F*  nunu_phi ; //!
 
   // llvv for H
+  // indeed here are lvlv for bbWW
   TH1F* llvv_pT; //!
   TH1F* llvv_phi; //!
   TH1F* llvv_mT; //!
@@ -216,7 +219,7 @@ public:
   int ctr_save; //!
 
   // this is a standard constructor
-  readtruth_hhbbzzllvv ();
+  readtruth_hhbbwwlvlv ();
   void setOption( std::string opt );
 
   // these are the functions inherited from Algorithm
@@ -231,7 +234,7 @@ public:
   virtual EL::StatusCode histFinalize ();
 
   // this is needed to distribute the algorithm to the workers
-  ClassDef(readtruth_hhbbzzllvv, 1);
+  ClassDef(readtruth_hhbbwwlvlv, 1);
 };
 
 #endif
