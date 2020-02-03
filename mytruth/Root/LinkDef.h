@@ -5,6 +5,7 @@
 #include <mytruth/readtruth_hhbbwwlvlv_chkweight.h>
 #include <mytruth/readtruth_hhbbttlvlv.h>
 #include <mytruth/readtruth_hh4b.h>
+#include <mytruth/readtruth_vbfhh.h>
 
 #ifdef __CINT__
 
@@ -23,4 +24,5 @@
 #pragma link C++ class readtruth_hhbbwwlvlv_chkweight+;
 #pragma link C++ class readtruth_hhbbttlvlv+;
 #pragma link C++ class readtruth_hh4b+;
+#pragma link C++ class readtruth_vbfhh+;
 #endif
