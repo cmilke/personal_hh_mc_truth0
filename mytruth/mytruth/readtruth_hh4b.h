@@ -74,6 +74,7 @@ public:
   TH1F* HH_m; //!
 
   TH2F* HH_pT_weight; //!
+  TH2F* HH_m_weight; //!
   TH1F* hist_weight; //!
 
   // final state particles in parton level
@@ -84,6 +85,9 @@ public:
   TH1F* dEta_HH; //!
   TH1F* dPhi_HH; //!
   TH1F* dR_HH; //!
+
+  TH1F* dR_qq; //!
+  TH1F* Num_q; //!
 
   //TH1F* cosTheta_l_Z; //!
   //TH1F* cosTheta_b_H; //!

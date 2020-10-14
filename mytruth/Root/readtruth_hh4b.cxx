@@ -41,12 +41,12 @@ const xAOD::TruthParticle* readtruth_hh4b :: correctedParticle( const xAOD::Trut
   const xAOD::TruthParticle* corrpart = part;
   for( unsigned ikid=0; ikid<part->nChildren(); ++ikid ){
     const xAOD::TruthParticle* kid = part->child( ikid );
-	if( kid->pdgId() == part->pdgId() ){
-	  //Info( "correctedParticle()", "[pdgId %d] pT %f, eta %f, barcode %d, parent barcode %d, status %d",
-	  //      kid->pdgId(), kid->pt(), kid->eta(), kid->barcode(), kid->parent(0)->barcode(), kid->status() );
-	  corrpart = correctedParticle( kid );
-	  break;
-	}
+    if( kid->pdgId() == part->pdgId() ){
+      //Info( "correctedParticle()", "[pdgId %d] pT %f, eta %f, barcode %d, parent barcode %d, status %d",
+      //      kid->pdgId(), kid->pt(), kid->eta(), kid->barcode(), kid->parent(0)->barcode(), kid->status() );
+      corrpart = correctedParticle( kid );
+      break;
+    }
   }
   return corrpart;
 }
@@ -56,19 +56,19 @@ const xAOD::TruthParticle* readtruth_hh4b :: correctedParticle( const xAOD::Trut
 // get the quark before they get in hadronization (not look good in bb_m)
 // does not work ...
 const xAOD::TruthParticle* readtruth_hh4b :: correctedQuark( const xAOD::TruthParticle * part ){
-  //Info("correctedParticle()", "Check particle with barcode %d, status %d", part->barcode(), part->status() );
-  const xAOD::TruthParticle* corrpart = part;
-  for( unsigned ikid=0; ikid<part->nChildren(); ++ikid ){
-    const xAOD::TruthParticle* kid = part->child( ikid );
-	if( kid->pdgId() == part->pdgId() ){
-	  //Info( "correctedParticle()", "[pdgId %d] pT %f, eta %f, barcode %d, parent barcode %d, status %d",
-	  //      kid->pdgId(), kid->pt(), kid->eta(), kid->barcode(), kid->parent(0)->barcode(), kid->status() );
-	  if( kid->status()>=71 ) break;
-	  corrpart = correctedParticle( kid );
-	  break;
-	}
-  }
-  return corrpart;
+//Info("correctedParticle()", "Check particle with barcode %d, status %d", part->barcode(), part->status() );
+const xAOD::TruthParticle* corrpart = part;
+for( unsigned ikid=0; ikid<part->nChildren(); ++ikid ){
+const xAOD::TruthParticle* kid = part->child( ikid );
+if( kid->pdgId() == part->pdgId() ){
+//Info( "correctedParticle()", "[pdgId %d] pT %f, eta %f, barcode %d, parent barcode %d, status %d",
+//      kid->pdgId(), kid->pt(), kid->eta(), kid->barcode(), kid->parent(0)->barcode(), kid->status() );
+if( kid->status()>=71 ) break;
+corrpart = correctedParticle( kid );
+break;
+}
+}
+return corrpart;
 }
 */
 
@@ -93,11 +93,11 @@ void readtruth_hh4b :: printChildren( const xAOD::TruthParticle* part ){
 // sort of making a jet
 // not working at all !
 TLorentzVector readtruth_hh4b :: getJet( const xAOD::TruthParticle* part ){
-  TLorentzVector jet;
-  for( unsigned int ikid=0; ikid<part->nChildren(); ++ikid ){
-    jet += part->child(ikid)->p4();
-  }
-  return jet;
+TLorentzVector jet;
+for( unsigned int ikid=0; ikid<part->nChildren(); ++ikid ){
+jet += part->child(ikid)->p4();
+}
+return jet;
 }
 */
 
@@ -138,20 +138,21 @@ EL::StatusCode readtruth_hh4b :: histInitialize ()
   H1_phi = mkTH1F("H1_phi","#phi(H1)", 40, -3.15, 3.15 );
   H1_E = mkTH1F("H1_E","E(H1)", 50, 0, 2000);
   H1_m = mkTH1F("H1_m","m(H1)", 40, 125-0.04, 125+0.04 );
-        
+
   H2_pT = mkTH1F("H2_pT","p_{T}(H2)", 50, 0, 800);
   H2_eta = mkTH1F("H2_eta","#eta(H2)", 40, -5, 5);
   H2_phi = mkTH1F("H2_phi","#phi(H2)", 40, -3.15, 3.15 );
   H2_E = mkTH1F("H2_E","E(H2)", 50, 0, 2000);
   H2_m = mkTH1F("H2_m","m(H2)", 40, 125-0.04, 125+0.04 );
 
-  HH_pT = mkTH1F("HH_pT","p_{T}(HH)", 1000, 0, 1000); //50 bins
+  HH_pT = mkTH1F("HH_pT","p_{T}(HH)", 50, 0, 1000); //50 bins
   HH_eta = mkTH1F("HH_eta","#eta(HH)", 40, -10, 10);
   HH_phi = mkTH1F("HH_phi","#phi(HH)", 40, -3.15, 3.15 );
-  HH_E = mkTH1F("HH_E","E(HH)", 100, 0, 4000);
-  HH_m = mkTH1F("HH_m","m(HH)", 3000, 0, 3000);
+  HH_E = mkTH1F("HH_E","E(HH)", 50, 0, 4000);
+  HH_m = mkTH1F("HH_m","m(HH)", 50, 0, 3000);
 
   HH_pT_weight = mkTH2F( "HH_pT_weight", "p_{T}(HH) vs weight", 40, 0, 400, 25, -0.5, 0.5 );
+  HH_m_weight = mkTH2F( "HH_m_weight", "m(HH) vs weight", 40, 0, 400, 25, -0.5, 0.5 );
   hist_weight = mkTH1F("weight","weight",40,-0.5, 0.5);
 
   dEta_HH = mkTH1F("dEta_HH","#Delta#eta(H,H)", 40, 0, 8);
@@ -193,15 +194,19 @@ EL::StatusCode readtruth_hh4b :: histInitialize ()
   bb2_m = mkTH1F("bb2_m","m(bb from H2)", 40, 125-50, 125+50 );
 
   // bbbb for HH
-  bbbb_pT = mkTH1F("bbbb_pT","p_{T}(bbbb)", 1000, 0, 1000); //50 bins
+  bbbb_pT = mkTH1F("bbbb_pT","p_{T}(bbbb)", 50, 0, 1000); //50 bins
   bbbb_eta = mkTH1F("bbbb_eta","#eta(bbbb)", 40, -10, 10);
   bbbb_phi = mkTH1F("bbbb_phi","#phi(bbbb)", 40, -3.15, 3.15 );
-  bbbb_E = mkTH1F("bbbb_E","E(bbbb)", 100, 0, 4000);
-  bbbb_m = mkTH1F("bbbb_m","m(bbbb)", 3000, 0, 3000);
+  bbbb_E = mkTH1F("bbbb_E","E(bbbb)", 50, 0, 4000);
+  bbbb_m = mkTH1F("bbbb_m","m(bbbb)", 50, 0, 3000);
 
   dEta_bb_bb = mkTH1F("dEta_bb_bb","#Delta#eta(bb,bb)", 40, 0, 8);
   dPhi_bb_bb = mkTH1F("dPhi_bb_bb","#Delta#phi(bb,bb)", 40, 0, 3.15);
   dR_bb_bb = mkTH1F("dR_bb_bb","#DeltaR(bb,bb)", 40, 0, 10);
+
+  // vbf initial scatter quarks
+  dR_qq = mkTH1F("dR_qq","#DeltaR(q,q)", 40, 0, 10);
+  Num_q = mkTH1F("Num_q","Number of q", 10, 0, 10);
 
   // register
   //for_each( myhist.begin(), myhist.end(), std::bind1st( std::mem_fun( &readtruth_hh4b::mbook ), this ) );
@@ -299,319 +304,334 @@ EL::StatusCode readtruth_hh4b :: execute ()
 
   //std::cout << "DDD MC weight vector size: " << mcevt->at(0)->weights().size() << std::endl;
 
-//  if( weight<0 ){
-//  }else{
-//    return EL::StatusCode::SUCCESS;
-//  }
+  //  if( weight<0 ){
+  //  }else{
+  //    return EL::StatusCode::SUCCESS;
+  //  }
 
   // my collection of truth particles
   std::map<std::string, const xAOD::TruthParticle*> mycollection;
   std::vector<const xAOD::TruthParticle*> mybquarks_H1; // 2 b quarks from H1
   std::vector<const xAOD::TruthParticle*> mybquarks_H2; // 2 b quarks from H2
   std::vector<const xAOD::TruthParticle*> mybquarks; // all 4 b quarks ordere by pT
+  std::vector<const xAOD::TruthParticle*> myquarks; //addiional quarks from VBF mode
   typedef std::pair<std::string, const xAOD::TruthParticle*> PartType;
 
   for( unsigned ipart=0; ipart<npart; ++ipart ){
 
     const xAOD::TruthParticle* particle = mcpart->at( ipart );
 
-	// debug
-	if( particle->pdgId() == 25 ){
-	  Info( "execute()", "ID %d, barcode %d, parent ID %d, pT %f, px %f, py %f, pz %f, eta %f, phi %f",
-	       particle->pdgId(), particle->barcode(), particle->parent(0)->pdgId(),
-	       particle->pt(), particle->px(), particle->py(), particle->pz(), particle->eta(), particle->phi() );
-	}
+    // debug
+    if( particle->pdgId() == 25 ){
+      Info( "execute()", "ID %d, barcode %d, parent ID %d, pT %f, px %f, py %f, pz %f, eta %f, phi %f",
+          particle->pdgId(), particle->barcode(), particle->parent(0)->pdgId(),
+          particle->pt(), particle->px(), particle->py(), particle->pz(), particle->eta(), particle->phi() );
+    }
 
-	// H
-	// after shower dressing
-	if( particle->pdgId() == 25 ){ //
-	  particle = correctedParticle( particle );
+    //find VBF quarks
+    if(particle->hasProdVtx()==1 && particle->prodVtx()->barcode()==-1 && abs(particle->pdgId())<6){
+      particle = correctedParticle( particle );
+      myquarks.push_back(particle);
+    }
 
-    // before shower dressing
-	//if( particle->pdgId() == 25 && !hasParent( particle, 25 ) ){ // first particle, i.e. LHE file particle
+    // H
+    // after shower dressing
+    if( particle->pdgId() == 25 ){ //
+      particle = correctedParticle( particle );
+
+      // before shower dressing
+      //if( particle->pdgId() == 25 && !hasParent( particle, 25 ) ){ // first particle, i.e. LHE file particle
 
       // general
-	  if( mycollection.count("H1") == 0 ) mycollection["H1"] = particle;
-	  else{
-	    if( particle != mycollection["H1"] ) mycollection["H2"] = particle;
-	  }
-	  // sort by pT later
+      if( mycollection.count("H1") == 0 ) mycollection["H1"] = particle;
+      else{
+        if( particle != mycollection["H1"] ) mycollection["H2"] = particle;
+      }
+      // sort by pT later
 
-	  // debug
-	  Info( "execute()", "SAVE ID %d, barcode %d, parent ID %d, pT %f, px %f, py %f, pz %f, eta %f, phi %f",
-	       particle->pdgId(), particle->barcode(), particle->parent(0)->pdgId(),
-	       particle->pt(), particle->px(), particle->py(), particle->pz(), particle->eta(), particle->phi() );
-	}
+      // debug
+      Info( "execute()", "SAVE ID %d, barcode %d, parent ID %d, pT %f, px %f, py %f, pz %f, eta %f, phi %f",
+          particle->pdgId(), particle->barcode(), particle->parent(0)->pdgId(),
+          particle->pt(), particle->px(), particle->py(), particle->pz(), particle->eta(), particle->phi() );
+    }
 
-	// once found H1 H2 quit loop (only used without looking into H decays)
-	if( mycollection.count("H1")==1 && mycollection.count("H2")==1 )
-	  break;
+    // once found H1 H2 quit loop (only used without looking into H decays)
+    if( mycollection.count("H1")==1 && mycollection.count("H2")==1 )
+      break;
 
-  }
+    }
 
-  // check
-  if( mycollection.count("H1")==1 && mycollection.count("H2")==1 ){
-    ++ctr_save;
-  }else{
-    Error("execute()","cannot fine a pair of Higgs, skip event"); return EL::StatusCode::SUCCESS;
-  }
+    // check
+    if( mycollection.count("H1")==1 && mycollection.count("H2")==1 ){
+      ++ctr_save;
+    }else{
+      Error("execute()","cannot fine a pair of Higgs, skip event"); return EL::StatusCode::SUCCESS;
+    }
 
-  // sort by pT
-  double _h1_pT = mycollection["H1"]->pt();
-  double _h2_pT = mycollection["H2"]->pt();
-  if( _h1_pT < _h2_pT ){
-    const xAOD::TruthParticle* _h2 = mycollection["H1"];
-    const xAOD::TruthParticle* _h1 = mycollection["H2"];
-	mycollection["H1"] = _h1;
-	mycollection["H2"] = _h2;
-  }
+    // sort by pT
+    double _h1_pT = mycollection["H1"]->pt();
+    double _h2_pT = mycollection["H2"]->pt();
+    if( _h1_pT < _h2_pT ){
+      const xAOD::TruthParticle* _h2 = mycollection["H1"];
+      const xAOD::TruthParticle* _h1 = mycollection["H2"];
+      mycollection["H1"] = _h1;
+      mycollection["H2"] = _h2;
+    }
 
-/*
-  // test/count bbyy bbZy events
-  // from H1
-  int _c_b = 0;
-  int _c_y = 0;
-  int _c_Z = 0;
-  for( unsigned int ikid=0; ikid<mycollection["H1"]->nChildren(); ++ikid){
+    /*
+    // test/count bbyy bbZy events
+    // from H1
+    int _c_b = 0;
+    int _c_y = 0;
+    int _c_Z = 0;
+    for( unsigned int ikid=0; ikid<mycollection["H1"]->nChildren(); ++ikid){
     const xAOD::TruthParticle* kid = mycollection["H1"]->child(ikid);
-	if( abs(kid->pdgId()) == 5 ){
-	  ++_c_b;
-	}
-	if( abs(kid->pdgId()) == 22 ){
-	  ++_c_y;
-	}
-	if( abs(kid->pdgId()) == 23 ){
-	  ++_c_Z;
-	}
-  }
-  // from H2
-  for( unsigned int ikid=0; ikid<mycollection["H2"]->nChildren(); ++ikid){
+    if( abs(kid->pdgId()) == 5 ){
+    ++_c_b;
+    }
+    if( abs(kid->pdgId()) == 22 ){
+    ++_c_y;
+    }
+    if( abs(kid->pdgId()) == 23 ){
+    ++_c_Z;
+    }
+    }
+    // from H2
+    for( unsigned int ikid=0; ikid<mycollection["H2"]->nChildren(); ++ikid){
     const xAOD::TruthParticle* kid = mycollection["H2"]->child(ikid);
-	if( abs(kid->pdgId()) == 5 ){
-	  ++_c_b;
-	}
-	if( abs(kid->pdgId()) == 22 ){
-	  ++_c_y;
-	}
-	if( abs(kid->pdgId()) == 23 ){
-	  ++_c_Z;
-	}
+    if( abs(kid->pdgId()) == 5 ){
+    ++_c_b;
+    }
+    if( abs(kid->pdgId()) == 22 ){
+    ++_c_y;
+    }
+    if( abs(kid->pdgId()) == 23 ){
+    ++_c_Z;
+    }
 
-  }
-  //
-  if( (_c_b==2)&&(_c_y==1)&&(_c_Z==1) ){
+    }
+    //
+    if( (_c_b==2)&&(_c_y==1)&&(_c_Z==1) ){
     ++ctr_bbZy;
-  }
-  if( (_c_b==2)&&(_c_y==2) ){
+    }
+    if( (_c_b==2)&&(_c_y==2) ){
     ++ctr_bbyy;
+    }
+    */
+
+
+    // original codes for 4b final stats
+
+    // find b quarks originating from these 2 Higgs bosons
+    // from H1
+    for( unsigned int ikid=0; ikid<mycollection["H1"]->nChildren(); ++ikid){
+      const xAOD::TruthParticle* kid = mycollection["H1"]->child(ikid);
+      if( abs(kid->pdgId()) == 5 ){
+        kid = correctedParticle( kid ); // after shower dressing
+        if( std::find(mybquarks_H1.begin(), mybquarks_H1.end(), kid) == mybquarks_H1.end() ){
+          mybquarks_H1.push_back(kid);
+        }
+      }
+      if( mybquarks_H1.size()==2 ) break;
+    }
+    // from H2
+    for( unsigned int ikid=0; ikid<mycollection["H2"]->nChildren(); ++ikid){
+      const xAOD::TruthParticle* kid = mycollection["H2"]->child(ikid);
+      if( abs(kid->pdgId()) == 5 ){
+        kid = correctedParticle( kid ); // after shower dressing
+        if( std::find(mybquarks_H2.begin(), mybquarks_H2.end(), kid) == mybquarks_H2.end() ){
+          mybquarks_H2.push_back(kid);
+        }
+      }
+      if( mybquarks_H2.size()==2 ) break;
+    }
+    // all 4 b quarks ordered by pT
+    mybquarks.reserve( mybquarks_H1.size() + mybquarks_H2.size() );
+    mybquarks.insert( mybquarks.end(), mybquarks_H1.begin(), mybquarks_H1.end() );
+    mybquarks.insert( mybquarks.end(), mybquarks_H2.begin(), mybquarks_H2.end() );
+    std::sort( mybquarks.begin(), mybquarks.end(), larger_pT );
+    if ( mybquarks.size() < 4 ) return EL::StatusCode::SUCCESS;
+
+    //test
+    //std::cout << "sorted b quarks" << std::endl;
+    //for( auto obj : mybquarks ) std::cout << "b quark: " << obj << " pT: " << obj->pt() << std::endl;
+
+    // check check check !!!
+    // do not fill anything before check!!!
+    //
+    // check there is one A/H/Z
+    //if( mycollection.count("A") == 1); else{ Error("execute()","missing A, skip event"); return EL::StatusCode::SUCCESS;}
+    //if( mycollection.count("H") == 1); else{ Error("execute()","missing H, skip event"); return EL::StatusCode::SUCCESS;}
+    //if( mycollection.count("Z") == 1); else{ Error("execute()","missing Z, skip event"); return EL::StatusCode::SUCCESS;}
+    // following is not a check any more
+    // drop counting tautau
+    //if( ( mycollection.count("e-") + mycollection.count("e+") == 2 ) ){
+    //  lepFlavor = 11;
+    //}
+    //if( ( mycollection.count("mu-") + mycollection.count("mu+") == 2 ) ){
+    //  lepFlavor = 13;
+    //}
+    //if( lepFlavor != 11 && lepFlavor != 13 ){
+    //  return EL::StatusCode::SUCCESS; // skip tautau
+    //}
+
+    // counter of Z decay, leptonic tau is incuded, had tau is droped in counting
+    //ctr_zee += (lepFlavor == 11);
+    //ctr_zmm += (lepFlavor == 13);
+    //ctr_ztt += (lepFlavor == 15);
+
+    // fill the histograms
+
+    // bosons
+    H1_pT->Fill( mycollection["H1"]->pt()*GeV, weight );
+    H1_eta->Fill( mycollection["H1"]->eta(), weight );
+    H1_phi->Fill( mycollection["H1"]->phi(), weight );
+    H1_E->Fill( mycollection["H1"]->e()*GeV, weight );
+    H1_m->Fill( mycollection["H1"]->m()*GeV, weight );
+
+    H2_pT->Fill( mycollection["H2"]->pt()*GeV, weight );
+    H2_eta->Fill( mycollection["H2"]->eta(), weight );
+    H2_phi->Fill( mycollection["H2"]->phi(), weight );
+    H2_E->Fill( mycollection["H2"]->e()*GeV, weight );
+    H2_m->Fill( mycollection["H2"]->m()*GeV, weight );
+
+    // system var
+    TLorentzVector v_H1 = mycollection["H1"]->p4();
+    TLorentzVector v_H2 = mycollection["H2"]->p4();
+    TLorentzVector v_HH = v_H1 + v_H2;
+    TLorentzVector v_q1, v_q2;
+    if(myquarks.size()>0) v_q1.SetPtEtaPhiE(myquarks[0]->pt(),myquarks[0]->eta(),myquarks[0]->phi(),myquarks[0]->e());
+    if(myquarks.size()>1) v_q2.SetPtEtaPhiE(myquarks[1]->pt(),myquarks[1]->eta(),myquarks[1]->phi(),myquarks[1]->e());
+
+
+    HH_pT->Fill( v_HH.Pt()*GeV, weight );
+    //  std::cout << "DDD pTHH: " << v_HH.Pt()*GeV << " weight: " << weight << std::endl;
+    //  HH_pT->Fill( sqrt(pow(mycollection["H1"]->px()+mycollection["H2"]->px(), 2)+pow(mycollection["H1"]->py()+mycollection["H2"]->py(), 2))*GeV, weight);
+    HH_eta->Fill( v_HH.Eta(), weight );
+    HH_phi->Fill( v_HH.Phi(), weight );
+    HH_E->Fill( v_HH.E()*GeV, weight );
+    HH_m->Fill( v_HH.M()*GeV, weight );
+
+    HH_pT_weight->Fill( v_HH.Pt()*GeV, weight, 1 );
+    HH_m_weight->Fill( v_HH.M()*GeV, weight, 1 );
+    hist_weight->Fill(weight,1);
+
+    //std::cout << "DDD v_HH.Phi(): " << v_HH.Phi() << std::endl;
+
+    // angular var
+    dEta_HH->Fill( std::abs( v_H1.Eta() - v_H2.Eta() ), weight);
+    dPhi_HH->Fill( v_H1.DeltaPhi(v_H2), weight);
+    dR_HH->Fill( v_H1.DeltaR(v_H2), weight);
+
+    if(myquarks.size()>1) dR_qq->Fill(v_q1.DeltaR(v_q2),weight);
+    Num_q->Fill(myquarks.size());
+
+    // b quarks
+    b1_pT->Fill( mybquarks[0]->pt()*GeV, weight );
+    b1_eta->Fill( mybquarks[0]->eta(), weight );
+    b1_phi->Fill( mybquarks[0]->phi(), weight );
+    b1_E->Fill( mybquarks[0]->e()*GeV, weight );
+
+    b2_pT->Fill( mybquarks[1]->pt()*GeV, weight );
+    b2_eta->Fill( mybquarks[1]->eta(), weight );
+    b2_phi->Fill( mybquarks[1]->phi(), weight );
+    b2_E->Fill( mybquarks[1]->e()*GeV, weight );
+
+    b3_pT->Fill( mybquarks[2]->pt()*GeV, weight );
+    b3_eta->Fill( mybquarks[2]->eta(), weight );
+    b3_phi->Fill( mybquarks[2]->phi(), weight );
+    b3_E->Fill( mybquarks[2]->e()*GeV, weight );
+
+    b4_pT->Fill( mybquarks[3]->pt()*GeV, weight );
+    b4_eta->Fill( mybquarks[3]->eta(), weight );
+    b4_phi->Fill( mybquarks[3]->phi(), weight );
+    b4_E->Fill( mybquarks[3]->e()*GeV, weight );
+
+    // bb1 for H1; bb2 for H2
+    TLorentzVector v_bb1 = mybquarks_H1[0]->p4() + mybquarks_H1[1]->p4();
+    TLorentzVector v_bb2 = mybquarks_H2[0]->p4() + mybquarks_H2[1]->p4();
+
+    bb1_pT->Fill( v_bb1.Pt()*GeV, weight );
+    bb1_eta->Fill( v_bb1.Eta(), weight );
+    bb1_phi->Fill( v_bb1.Phi(), weight );
+    bb1_E->Fill( v_bb1.E()*GeV, weight );
+    bb1_m->Fill( v_bb1.M()*GeV, weight );
+
+    bb2_pT->Fill( v_bb2.Pt()*GeV, weight );
+    bb2_eta->Fill( v_bb2.Eta(), weight );
+    bb2_phi->Fill( v_bb2.Phi(), weight );
+    bb2_E->Fill( v_bb2.E()*GeV, weight );
+    bb2_m->Fill( v_bb2.M()*GeV, weight );
+
+    // bbbb for HH
+    TLorentzVector v_bbbb = v_bb1 + v_bb2;
+    bbbb_pT->Fill( v_bbbb.Pt()*GeV, weight );
+    bbbb_eta->Fill( v_bbbb.Eta(), weight );
+    bbbb_phi->Fill( v_bbbb.Phi(), weight );
+    bbbb_E->Fill( v_bbbb.E()*GeV, weight );
+    bbbb_m->Fill( v_bbbb.M()*GeV, weight );
+
+    // angular
+    dEta_bb_bb->Fill( std::abs( v_bb1.Eta() - v_bb2.Eta() ), weight);
+    dPhi_bb_bb->Fill( v_bb1.DeltaPhi(v_bb2), weight);
+    dR_bb_bb->Fill( v_bb1.DeltaR(v_bb2), weight);
+
+    return EL::StatusCode::SUCCESS;
   }
-*/
 
 
-  // original codes for 4b final stats
 
-  // find b quarks originating from these 2 Higgs bosons
-  // from H1
-  for( unsigned int ikid=0; ikid<mycollection["H1"]->nChildren(); ++ikid){
-    const xAOD::TruthParticle* kid = mycollection["H1"]->child(ikid);
-	if( abs(kid->pdgId()) == 5 ){
-	  kid = correctedParticle( kid ); // after shower dressing
-	  if( std::find(mybquarks_H1.begin(), mybquarks_H1.end(), kid) == mybquarks_H1.end() ){
-	    mybquarks_H1.push_back(kid);
-	  }
-	}
-	if( mybquarks_H1.size()==2 ) break;
+  EL::StatusCode readtruth_hh4b :: postExecute ()
+  {
+    // Here you do everything that needs to be done after the main event
+    // processing.  This is typically very rare, particularly in user
+    // code.  It is mainly used in implementing the NTupleSvc.
+    return EL::StatusCode::SUCCESS;
   }
-  // from H2
-  for( unsigned int ikid=0; ikid<mycollection["H2"]->nChildren(); ++ikid){
-    const xAOD::TruthParticle* kid = mycollection["H2"]->child(ikid);
-	if( abs(kid->pdgId()) == 5 ){
-	  kid = correctedParticle( kid ); // after shower dressing
-	  if( std::find(mybquarks_H2.begin(), mybquarks_H2.end(), kid) == mybquarks_H2.end() ){
-	    mybquarks_H2.push_back(kid);
-	  }
-	}
-	if( mybquarks_H2.size()==2 ) break;
+
+
+
+  EL::StatusCode readtruth_hh4b :: finalize ()
+  {
+    // This method is the mirror image of initialize(), meaning it gets
+    // called after the last event has been processed on the worker node
+    // and allows you to finish up any objects you created in
+    // initialize() before they are written to disk.  This is actually
+    // fairly rare, since this happens separately for each worker node.
+    // Most of the time you want to do your post-processing on the
+    // submission node after all your histogram outputs have been
+    // merged.  This is different from histFinalize() in that it only
+    // gets called on worker nodes that processed input events.
+
+    ANA_CHECK_SET_TYPE( EL::StatusCode );
+
+    xAOD::TEvent* event = wk()->xaodEvent();
+
+    Error("finalize()", "Total events: %d, truth collected events: %d", ctr_tot, int(ctr_save) );
+
+    // test/count bbyy/bbZy
+    //Error("finalize()", "Only for bbyy/bbZy events: bbyy %d, bbZy %d", ctr_bbyy, ctr_bbZy );
+
+    // weight
+    Error("finalize()", "# evt with positive weight: %ld", ctr_posw);
+    Error("finalize()", "# evt with negative weight: %ld", ctr_negw);
+
+    return EL::StatusCode::SUCCESS;
   }
-  // all 4 b quarks ordered by pT
-  mybquarks.reserve( mybquarks_H1.size() + mybquarks_H2.size() );
-  mybquarks.insert( mybquarks.end(), mybquarks_H1.begin(), mybquarks_H1.end() );
-  mybquarks.insert( mybquarks.end(), mybquarks_H2.begin(), mybquarks_H2.end() );
-  std::sort( mybquarks.begin(), mybquarks.end(), larger_pT );
-
-  //test
-  //std::cout << "sorted b quarks" << std::endl;
-  //for( auto obj : mybquarks ) std::cout << "b quark: " << obj << " pT: " << obj->pt() << std::endl;
-
-  // check check check !!!
-  // do not fill anything before check!!!
-  //
-  // check there is one A/H/Z
-  //if( mycollection.count("A") == 1); else{ Error("execute()","missing A, skip event"); return EL::StatusCode::SUCCESS;}
-  //if( mycollection.count("H") == 1); else{ Error("execute()","missing H, skip event"); return EL::StatusCode::SUCCESS;}
-  //if( mycollection.count("Z") == 1); else{ Error("execute()","missing Z, skip event"); return EL::StatusCode::SUCCESS;}
-  // following is not a check any more
-  // drop counting tautau
-  //if( ( mycollection.count("e-") + mycollection.count("e+") == 2 ) ){
-  //  lepFlavor = 11;
-  //}
-  //if( ( mycollection.count("mu-") + mycollection.count("mu+") == 2 ) ){
-  //  lepFlavor = 13;
-  //}
-  //if( lepFlavor != 11 && lepFlavor != 13 ){
-  //  return EL::StatusCode::SUCCESS; // skip tautau
-  //}
-
-  // counter of Z decay, leptonic tau is incuded, had tau is droped in counting
-  //ctr_zee += (lepFlavor == 11);
-  //ctr_zmm += (lepFlavor == 13);
-  //ctr_ztt += (lepFlavor == 15);
-
-  // fill the histograms
-
-  // bosons
-  H1_pT->Fill( mycollection["H1"]->pt()*GeV, weight );
-  H1_eta->Fill( mycollection["H1"]->eta(), weight );
-  H1_phi->Fill( mycollection["H1"]->phi(), weight );
-  H1_E->Fill( mycollection["H1"]->e()*GeV, weight );
-  H1_m->Fill( mycollection["H1"]->m()*GeV, weight );
-
-  H2_pT->Fill( mycollection["H2"]->pt()*GeV, weight );
-  H2_eta->Fill( mycollection["H2"]->eta(), weight );
-  H2_phi->Fill( mycollection["H2"]->phi(), weight );
-  H2_E->Fill( mycollection["H2"]->e()*GeV, weight );
-  H2_m->Fill( mycollection["H2"]->m()*GeV, weight );
-
-  // system var
-  TLorentzVector v_H1 = mycollection["H1"]->p4();
-  TLorentzVector v_H2 = mycollection["H2"]->p4();
-  TLorentzVector v_HH = v_H1 + v_H2;
-
-
-  HH_pT->Fill( v_HH.Pt()*GeV, weight );
-//  std::cout << "DDD pTHH: " << v_HH.Pt()*GeV << " weight: " << weight << std::endl;
-//  HH_pT->Fill( sqrt(pow(mycollection["H1"]->px()+mycollection["H2"]->px(), 2)+pow(mycollection["H1"]->py()+mycollection["H2"]->py(), 2))*GeV, weight);
-  HH_eta->Fill( v_HH.Eta(), weight );
-  HH_phi->Fill( v_HH.Phi(), weight );
-  HH_E->Fill( v_HH.E()*GeV, weight );
-  HH_m->Fill( v_HH.M()*GeV, weight );
-
-  HH_pT_weight->Fill( v_HH.Pt()*GeV, weight, 1 );
-  hist_weight->Fill(weight,1);
-
-  //std::cout << "DDD v_HH.Phi(): " << v_HH.Phi() << std::endl;
-
-  // angular var
-  dEta_HH->Fill( std::abs( v_H1.Eta() - v_H2.Eta() ), weight);
-  dPhi_HH->Fill( v_H1.DeltaPhi(v_H2), weight);
-  dR_HH->Fill( v_H1.DeltaR(v_H2), weight);
-
-  // b quarks
-  b1_pT->Fill( mybquarks[0]->pt()*GeV, weight );
-  b1_eta->Fill( mybquarks[0]->eta(), weight );
-  b1_phi->Fill( mybquarks[0]->phi(), weight );
-  b1_E->Fill( mybquarks[0]->e()*GeV, weight );
-
-  b2_pT->Fill( mybquarks[1]->pt()*GeV, weight );
-  b2_eta->Fill( mybquarks[1]->eta(), weight );
-  b2_phi->Fill( mybquarks[1]->phi(), weight );
-  b2_E->Fill( mybquarks[1]->e()*GeV, weight );
-
-  b3_pT->Fill( mybquarks[2]->pt()*GeV, weight );
-  b3_eta->Fill( mybquarks[2]->eta(), weight );
-  b3_phi->Fill( mybquarks[2]->phi(), weight );
-  b3_E->Fill( mybquarks[2]->e()*GeV, weight );
-
-  b4_pT->Fill( mybquarks[3]->pt()*GeV, weight );
-  b4_eta->Fill( mybquarks[3]->eta(), weight );
-  b4_phi->Fill( mybquarks[3]->phi(), weight );
-  b4_E->Fill( mybquarks[3]->e()*GeV, weight );
-
-  // bb1 for H1; bb2 for H2
-  TLorentzVector v_bb1 = mybquarks_H1[0]->p4() + mybquarks_H1[1]->p4();
-  TLorentzVector v_bb2 = mybquarks_H2[0]->p4() + mybquarks_H2[1]->p4();
-
-  bb1_pT->Fill( v_bb1.Pt()*GeV, weight );
-  bb1_eta->Fill( v_bb1.Eta(), weight );
-  bb1_phi->Fill( v_bb1.Phi(), weight );
-  bb1_E->Fill( v_bb1.E()*GeV, weight );
-  bb1_m->Fill( v_bb1.M()*GeV, weight );
-
-  bb2_pT->Fill( v_bb2.Pt()*GeV, weight );
-  bb2_eta->Fill( v_bb2.Eta(), weight );
-  bb2_phi->Fill( v_bb2.Phi(), weight );
-  bb2_E->Fill( v_bb2.E()*GeV, weight );
-  bb2_m->Fill( v_bb2.M()*GeV, weight );
-
-  // bbbb for HH
-  TLorentzVector v_bbbb = v_bb1 + v_bb2;
-  bbbb_pT->Fill( v_bbbb.Pt()*GeV, weight );
-  bbbb_eta->Fill( v_bbbb.Eta(), weight );
-  bbbb_phi->Fill( v_bbbb.Phi(), weight );
-  bbbb_E->Fill( v_bbbb.E()*GeV, weight );
-  bbbb_m->Fill( v_bbbb.M()*GeV, weight );
-
-  // angular
-  dEta_bb_bb->Fill( std::abs( v_bb1.Eta() - v_bb2.Eta() ), weight);
-  dPhi_bb_bb->Fill( v_bb1.DeltaPhi(v_bb2), weight);
-  dR_bb_bb->Fill( v_bb1.DeltaR(v_bb2), weight);
-
-  return EL::StatusCode::SUCCESS;
-}
 
 
 
-EL::StatusCode readtruth_hh4b :: postExecute ()
-{
-  // Here you do everything that needs to be done after the main event
-  // processing.  This is typically very rare, particularly in user
-  // code.  It is mainly used in implementing the NTupleSvc.
-  return EL::StatusCode::SUCCESS;
-}
-
-
-
-EL::StatusCode readtruth_hh4b :: finalize ()
-{
-  // This method is the mirror image of initialize(), meaning it gets
-  // called after the last event has been processed on the worker node
-  // and allows you to finish up any objects you created in
-  // initialize() before they are written to disk.  This is actually
-  // fairly rare, since this happens separately for each worker node.
-  // Most of the time you want to do your post-processing on the
-  // submission node after all your histogram outputs have been
-  // merged.  This is different from histFinalize() in that it only
-  // gets called on worker nodes that processed input events.
-
-  ANA_CHECK_SET_TYPE( EL::StatusCode );
-
-  xAOD::TEvent* event = wk()->xaodEvent();
-
-  Error("finalize()", "Total events: %d, truth collected events: %d", ctr_tot, int(ctr_save) );
-
-  // test/count bbyy/bbZy
-  //Error("finalize()", "Only for bbyy/bbZy events: bbyy %d, bbZy %d", ctr_bbyy, ctr_bbZy );
-
-  // weight
-  Error("finalize()", "# evt with positive weight: %ld", ctr_posw);
-  Error("finalize()", "# evt with negative weight: %ld", ctr_negw);
-
-  return EL::StatusCode::SUCCESS;
-}
-
-
-
-EL::StatusCode readtruth_hh4b :: histFinalize ()
-{
-  // This method is the mirror image of histInitialize(), meaning it
-  // gets called after the last event has been processed on the worker
-  // node and allows you to finish up any objects you created in
-  // histInitialize() before they are written to disk.  This is
-  // actually fairly rare, since this happens separately for each
-  // worker node.  Most of the time you want to do your
-  // post-processing on the submission node after all your histogram
-  // outputs have been merged.  This is different from finalize() in
-  // that it gets called on all worker nodes regardless of whether
-  // they processed input events.
-  return EL::StatusCode::SUCCESS;
-}
+  EL::StatusCode readtruth_hh4b :: histFinalize ()
+  {
+    // This method is the mirror image of histInitialize(), meaning it
+    // gets called after the last event has been processed on the worker
+    // node and allows you to finish up any objects you created in
+    // histInitialize() before they are written to disk.  This is
+    // actually fairly rare, since this happens separately for each
+    // worker node.  Most of the time you want to do your
+    // post-processing on the submission node after all your histogram
+    // outputs have been merged.  This is different from finalize() in
+    // that it gets called on all worker nodes regardless of whether
+    // they processed input events.
+    return EL::StatusCode::SUCCESS;
+  }
